@@ -303,7 +303,11 @@ class WarnSystem(SettingsMixin, AutomodMixin, BaseCog, metaclass=CompositeMetaCl
             await ctx.send(_("Hackban failed: No user found."))
         else:
             if ctx.channel.permissions_for(ctx.guild.me).add_reactions:
-                await ctx.message.add_reaction("✅")
+                try:
+                    await ctx.message.add_reaction("✅")
+                except discord.errors.NotFound:
+                    # retrigger or scheduler probably executed the command
+                    pass
             else:
                 await ctx.send(_("Done."))
 
